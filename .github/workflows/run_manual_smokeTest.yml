@@ -18,6 +18,7 @@ jobs:
         with:
           name: "env_data.json"
           json: '{ "prod" :{ "API_URL": ${{ secrets.TODOIST_API_URL }}, "TOKEN": ${{ secrets.TOKEN }} }}'
+          dir: 'todoistApp/'
       - name: set up jdk 11
         uses: actions/setup-java@v2
         with:
