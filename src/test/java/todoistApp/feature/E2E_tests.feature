@@ -3,7 +3,6 @@ Feature: Login Page Tests
     Background: Default URL
         Given url apiUrl
 
-    @smoke
     Scenario: Create a new project, the add a new task and finally delete task and project
        
         #Create a new Project
