@@ -17,7 +17,7 @@ jobs:
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "env_data.json"
-          json: "{ "prod" :{ "API_URL": ${{ secrets.TODOIST_API_URL }}, "TOKEN": ${{ secrets.TODOIST_TOKEN }} }}"
+          json: '{ "prod" :{ "API_URL": ${{ secrets.TODOIST_API_URL }}, "TOKEN": ${{ secrets.TODOIST_TOKEN }} }}'
       - uses: actions/checkout@v2
       - name: Set up JDK 11
         uses: actions/setup-java@v2
