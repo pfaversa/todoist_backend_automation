@@ -3,6 +3,7 @@ Feature: Login Page Tests
     Background: Default URL
         Given url apiUrl
 
+    @smoke
     Scenario: Create a new project with empty Name
         Given params { name: '', color: 'yellow', is_favorite: true }
         Given path 'projects'
