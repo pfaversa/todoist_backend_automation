@@ -1,22 +1,28 @@
 function fn() {
-  var env = karate.env; // get system property 'karate.env'
-  karate.log('karate.env system property was:', env);
+  
+  var env = karate.env;
+  var env_data = karate.read('classpath:todoistApp/env_data.json');
+  
+  var config = {
+    apiUrl: '',
+    accessToken: ''
+  }
+
   if (!env) {
     env = 'prod';
   }
-  var config = {
-    apiUrl: ''
-  }
-  if (env == 'dev') {
-    config.userEmail = 'pablo.karate@test.com'
-    config.userPass = 'pablo.karate'
+  
+  if (env == 'qa') {
+    config.apiUrl= env_data.qa.API_URL;
+    config.accessToken = env_data.qa.TOKEN;
+    
   }
   
   if (env == 'prod') {
-    config.apiUrl= 'https://api.todoist.com/rest/v2'
+    config.apiUrl= env_data.prod.API_URL;
+    config.accessToken = env_data.prod.TOKEN;
   }
 
-  var accessToken = karate.callSingle('classpath:helpers/GetToken.feature', config).authToken
-  karate.configure('headers',{ Authorization:'Bearer ' + accessToken })
+  karate.configure('headers',{ Authorization:'Bearer ' + config.accessToken })
   return config;
 }
