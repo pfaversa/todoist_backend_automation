@@ -3,9 +3,9 @@ Feature: Login Page Tests
     Background: Default URL
         Given url apiUrl
 
-    Scenario: Create new project and new task then delete task and project
+    Scenario: Create a new project, the add a new task and finally delete task and project
        
-        #Create new Project
+        #Create a new Project
         Given params { name: 'Karate Project', color: 'yellow', is_favorite: true }
         Given path 'projects'
         When method POST
@@ -27,7 +27,7 @@ Feature: Login Page Tests
         When method POST
         Then status 200
 
-        #List new project updated and verify
+        #List updated project and verify response values
         Given path 'projects',projectId
         When method GET
         Then status 200
@@ -36,21 +36,21 @@ Feature: Login Page Tests
         And match response.color == 'violet'
         And match response.is_favorite == false
 
-        #Verify empty tasks on new project
+        #Verify empty tasks in new project
         Given params { project_id: #(projectId)}
         Given path 'tasks'
         Given method GET
         Then status 200
         And match response == []
 
-        #Create new task on new project
+        #Create new task in a project
         Given params {content:'Karate Task', description:'Karate description', project_id: #(projectId)}
         Given path 'tasks'
         Given method POST
         Then status 200
         * def taskId = response.id
 
-        #Update new task
+        #Update the due date in task
         * def dataGenerator = Java.type('helpers.DataGenerator')
         * def taskDue = dataGenerator.dueDate(5);
         Given params {due_date: #(taskDue)}
@@ -58,7 +58,7 @@ Feature: Login Page Tests
         Given method POST
         Then status 200
 
-        #List task updated and verify
+        #List updated task and verify response values
         Given params { project_id: #(projectId)}
         Given path 'tasks'
         Given method GET
@@ -74,6 +74,3 @@ Feature: Login Page Tests
         Given path 'projects',projectId
         Given method DELETE
         Then status 204
-
-
-
