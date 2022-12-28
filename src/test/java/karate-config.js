@@ -1,7 +1,7 @@
 function fn() {
   
   var env = karate.env;
-  var env_data = karate.read('classpath:todoistApp/env_data.json');
+  var env_data = karate.read('../env_data.json');
   
   var config = {
     apiUrl: '',
