@@ -30,8 +30,6 @@ jobs:
         with:
           name: "env_data.json"
           json: '{ "prod" :{ "API_URL": ${{ secrets.TODOIST_API_URL }}, "TOKEN": ${{ secrets.TOKEN }} }}'
-      - name: print PWD
-        run: PWD
       - name: Run API Tests
         run: echo Starting the API testing!
       - name: test execution
