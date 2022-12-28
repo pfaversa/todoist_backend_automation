@@ -1,7 +1,7 @@
 function fn() {
   
   var env = karate.env;
-  var env_data = karate.read('../env_data.json');
+  //var env_data = karate.read('../env_data.json');
   
   var config = {
     apiUrl: '',
@@ -13,14 +13,14 @@ function fn() {
   }
   
   if (env == 'qa') {
-    config.apiUrl= env_data.qa.API_URL;
-    config.accessToken = env_data.qa.TOKEN;
+    config.apiUrl= "https://api.todoist.com/rest/v2"      //env_data.qa.API_URL;
+    config.accessToken = "f7ac641a44dc91d23a1f432a5333516135a317c7"    //env_data.qa.TOKEN;
     
   }
   
   if (env == 'prod') {
-    config.apiUrl= env_data.prod.API_URL;
-    config.accessToken = env_data.prod.TOKEN;
+    config.apiUrl= "https://api.todoist.com/rest/v2"      //env_data.prod.API_URL;
+    config.accessToken = "f7ac641a44dc91d23a1f432a5333516135a317c7"    //env_data.prod.TOKEN;
   }
 
   karate.configure('headers',{ Authorization:'Bearer ' + config.accessToken })
