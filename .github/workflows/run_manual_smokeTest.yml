@@ -11,12 +11,12 @@ jobs:
   e2e-backend-tests:
     runs-on: ubuntu-latest
     steps:
+      - name: git checkout
+        uses: actions/checkout@v2
       # create the playwright-report folder to uploda the test result
       - name: Create dir
         run: |
           mkdir todoistApp
-      - name: git checkout
-        uses: actions/checkout@v2
       - name: create json file
         uses: jsdaniell/create-json@v1.2.2
         with:
