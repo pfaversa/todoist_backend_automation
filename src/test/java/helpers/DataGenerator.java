@@ -3,39 +3,24 @@ package helpers;
 import com.github.javafaker.Faker;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import net.minidev.json.JSONObject;
-
-
 
 public class DataGenerator {
-    public static String getRandomEmail(){
+    public static String getRandomProjectName(){
         Faker faker = new Faker();
-        String email = faker.name().firstName().toLowerCase() + faker.random().nextInt(0, 100) + "@test.com";
-        return email;
+        String projectName = "How to Cook " + faker.food().dish().toUpperCase() + " like a Pro";
+        return projectName;
     }
 
-    public static String getRandomUserName(){
+    public static String getRandomTaskName(){
         Faker faker = new Faker();
-        String userName = faker.name().username();
-        return userName;
+        String taskName = " Step 1 - Start cooking first " + faker.food().ingredient().toUpperCase();
+        return taskName;
     }
 
-    public static JSONObject getRandomArticleValues(){
+    public static String getRandomTaskDescription(){
         Faker faker = new Faker();
-        String title = faker.gameOfThrones().character();
-        String description = faker.gameOfThrones().city();
-        String body = faker.gameOfThrones().dragon();
-        JSONObject json = new JSONObject();
-        json.put("title", title);
-        json.put("description", description);
-        json.put("body", body);
-        return json;
-    }
-
-    public static String commentArticle(){
-        Faker faker = new Faker();
-        String commentArt = faker.book().title();
-        return  commentArt;
+        String taskDescription =  "Serving size: " +faker.food().measurement();
+        return taskDescription;
     }
 
     public static String dueDate(int incrementDay) {
