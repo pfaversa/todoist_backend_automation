@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: set up jdk 11
         uses: actions/setup-java@v2
         with:
@@ -30,7 +30,17 @@ jobs:
         with:
           name: "env_data.json"
           json: '{ "prod" :{ "API_URL": ${{ secrets.TODOIST_API_URL }}, "TOKEN": ${{ secrets.TOKEN }} }}'
+      # create the playwright-report folder to uploda the test result
+      - name: Create dir
+        run: |
+          mkdir cucumber-html-reports
       - name: Run API Tests
         run: echo Starting the API testing!
       - name: test execution
         run: mvn test -Dkarate.env="prod"  -Dkarate.options="--tags @smoke"
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: cucumber-report
+          path: cucumber-html-reports
+        if: always()
