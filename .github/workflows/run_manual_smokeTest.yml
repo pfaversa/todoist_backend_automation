@@ -16,6 +16,7 @@ jobs:
       - name: create json file
         uses: jsdaniell/create-json@v1.2.2
         with:
+          run: pwd
           name: "env_data.json"
           json: '{ "prod" :{ "API_URL": ${{ secrets.TODOIST_API_URL }}, "TOKEN": ${{ secrets.TOKEN }} }}'
           dir: 'todoistApp/'
