@@ -42,5 +42,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cucumber-report
-          path: cucumber-html-reports
+          path: target/cucumber-html-reports
         if: always()
