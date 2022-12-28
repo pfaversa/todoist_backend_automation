@@ -25,18 +25,11 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Create dir
-        run: |
-          mkdir todoistApp
       - name: create json file
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "env_data.json"
           json: '{ "prod" :{ "API_URL": ${{ secrets.TODOIST_API_URL }}, "TOKEN": ${{ secrets.TOKEN }} }}'
-          dir: 'todoistApp/'
-          run: pwd
-      - name: print file
-        run: echo env_data.json
       - name: Run API Tests
         run: echo Starting the API testing!
       - name: test execution
