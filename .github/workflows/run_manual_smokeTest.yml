@@ -10,75 +10,27 @@ on: workflow_dispatch
 jobs:
   e2e-backend-tests:
     runs-on: ubuntu-latest
-    env: 
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
+      - name: git checkout
+        uses: actions/checkout@v2
+      - name: set up jdk 11
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
-          distribution: 'adopt'
-          cache: maven
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml      
-      # create .env file with secrets 
-      - name: create-json
+          distribution: adopt
+          java-version: 11
+      - name: cache maven 
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: create json file
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "env_data.json"
-          json: '{ "prod" :{ "API_URL": ${{ secrets.TODOIST_API_URL }}, "TOKEN": ${{ secrets.TODOIST_TOKEN }} }}'
-      # create the karate-report folder to uploda the test result
-      - name: Create dir
-        run: |
-          mkdir target
-          cd target
-          mkdir karate-report
-      # run smoke tests on All Browsers
-      - name: Run Smoke tests
+          json: '{ "prod" :{ "API_URL": ${{ secrets.TODOIST_API_URL }}, "TOKEN": ${{ secrets.TOKEN }} }}'
+      - name: Run API Tests
+        run: echo Starting the API testing!
+      - name: test execution
         run: mvn test -Dkarate.env="prod"  -Dkarate.options="--tags @smoke"
-      - name: Upload test results
-        uses: actions/upload-artifact@v2
-        with:
-          name: karrate-report
-          path: karrate-report
-        if: always()
-      ###### Commit Smoke Test status ######
-      - name: Tests Passed
-        if: ${{ success() }}
-        # set the merge commit status check
-        # using GitHub REST API
-        run: |
-          curl --request POST \
-          --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-          --header 'content-type: application/json' \
-          --data '{
-            "context": "Smoke Tests",
-            "state": "success",
-            "description": "Smoke tests passed",
-            "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          }'
-      - name: Test Failed
-        if: ${{ failure() }}
-        # set the merge commit status check
-        # using GitHub REST API
-        run: |
-          curl --request POST \
-          --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-          --header 'content-type: application/json' \
-          --data '{
-            "context": "Smoke Tests",
-            "state": "failure",
-            "description": "Smoke tests failed",
-            "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          }'
-      # Slack Integration - Send message to #qa-challenge channel
-      - name: Slack Notification
-        uses: act10ns/slack@v1
-        with: 
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps)}}
-          channel: '#qa-challenge'
-        if: always()
