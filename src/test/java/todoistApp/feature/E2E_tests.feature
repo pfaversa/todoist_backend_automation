@@ -3,22 +3,29 @@ Feature: Login Page Tests
     Background: Default URL
         Given url apiUrl
         Given def dataGenerator = Java.type('helpers.DataGenerator')
-    
+        Given def projectSchemaPOST = read('classpath:todoistApp/json/POST_schema_newProject.json')
+        Given def taskSchemaPOST = read('classpath:todoistApp/json/POST_schema_newTask.json')
+
+        #Set variables 
+        Given def projectName = dataGenerator.getRandomProjectName()
+        Given def projectNameUpdate = dataGenerator.getRandomProjectName()
+        Given def taskName = dataGenerator.getRandomTaskName()
+        Given def taskDescription = dataGenerator.getRandomTaskDescription()
+        Given def taskDue = dataGenerator.dueDate(5)
+        Given def timeValidator = read('classpath:helpers/timeValidator.js')
+        
     @smoke
     Scenario: Create a new project, then add a new task and finally delete task and project
        
         #Create a new Project
-        * def projectName = dataGenerator.getRandomProjectName()
-        * def projectNameUpdate = dataGenerator.getRandomProjectName()
-        * def taskName = dataGenerator.getRandomTaskName()
-        * def taskDescription = dataGenerator.getRandomTaskDescription()
-        * def taskDue = dataGenerator.dueDate(5);
-
         Given params { name: #(projectName), color: 'yellow', is_favorite: true }
         Given path 'projects'
         When method POST
         Then status 200
-        * def projectId = response.id
+        Then def projectId = response.id
+        And match response == projectSchemaPOST
+        And assert responseTime < 1500
+        And match header Content-Type == 'application/json'
 
         #List the new project
         Given path 'projects',projectId
@@ -49,6 +56,7 @@ Feature: Login Page Tests
         Given path 'tasks'
         Given method GET
         Then status 200
+        And match response == "#array"
         And match response == []
 
         #Create new task in a project
@@ -56,6 +64,7 @@ Feature: Login Page Tests
         Given path 'tasks'
         Given method POST
         Then status 200
+        And match response == taskSchemaPOST
         * def taskId = response.id
 
         #Update the due date in task
