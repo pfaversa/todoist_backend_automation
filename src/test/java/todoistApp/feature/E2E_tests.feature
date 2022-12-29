@@ -5,6 +5,7 @@ Feature: Login Page Tests
         Given def dataGenerator = Java.type('helpers.DataGenerator')
         Given def projectSchemaPOST = read('classpath:todoistApp/json/POST_schema_newProject.json')
         Given def taskSchemaPOST = read('classpath:todoistApp/json/POST_schema_newTask.json')
+        Given def timeValidator = read('classpath:helpers/timeValidator.js')
 
         #Set variables 
         Given def projectName = dataGenerator.getRandomProjectName()
@@ -12,7 +13,7 @@ Feature: Login Page Tests
         Given def taskName = dataGenerator.getRandomTaskName()
         Given def taskDescription = dataGenerator.getRandomTaskDescription()
         Given def taskDue = dataGenerator.dueDate(5)
-        Given def timeValidator = read('classpath:helpers/timeValidator.js')
+        
         
     @smoke
     Scenario: Create a new project, then add a new task and finally delete task and project
@@ -22,10 +23,10 @@ Feature: Login Page Tests
         Given path 'projects'
         When method POST
         Then status 200
-        Then def projectId = response.id
         And match response == projectSchemaPOST
         And assert responseTime < 1500
         And match header Content-Type == 'application/json'
+        * def projectId = response.id
 
         #List the new project
         Given path 'projects',projectId
