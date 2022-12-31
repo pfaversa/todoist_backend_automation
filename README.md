@@ -8,6 +8,7 @@
 - Verify response payload.
 - Verify response headers.
 - Verify correct application state.
+- Verify negative scanarios (status code 400)
 
 
 # Testing Framework
