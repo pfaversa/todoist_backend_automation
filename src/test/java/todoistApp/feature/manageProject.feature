@@ -3,8 +3,8 @@ Feature: Login Page Tests
     Background: Default URL
         Given url apiUrl
         Given def dataGenerator = Java.type('helpers.DataGenerator')
-        Given def projectSchemaPOST = read('classpath:todoistApp/json/POST_schema_newProject.json')
-        Given def taskSchemaPOST = read('classpath:todoistApp/json/POST_schema_newTask.json')
+        Given def projectSchemaPOST = read('classpath:todoistApp/json/post_schema_new_project.json')
+        Given def taskSchemaPOST = read('classpath:todoistApp/json/post_schema_new_task.json')
         Given def timeValidator = read('classpath:helpers/timeValidator.js')
 
         #Set variables 
