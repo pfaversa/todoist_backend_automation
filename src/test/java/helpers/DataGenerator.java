@@ -3,6 +3,7 @@ package helpers;
 import com.github.javafaker.Faker;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 
 public class DataGenerator {
     public static String getRandomProjectName(){
@@ -27,6 +28,13 @@ public class DataGenerator {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
         LocalDateTime now = LocalDateTime.now();  
         return (dtf.format(now.plusDays(incrementDay)));  
+    }
+
+    public static String colorProject(){
+        String[] colorsArry = {"berry_red", "red", "orange", "yellow", "olive_green", "lime_green", "green", "blue", "grape", "violet", "lavender", "magenta","grey"};
+        Random random = new Random();
+        int index = random.nextInt(colorsArry.length);
+        return colorsArry[index];
     }
 
 }
