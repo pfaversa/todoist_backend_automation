@@ -5,7 +5,9 @@ function fn() {
   
   var config = {
     apiUrl: '',
-    accessToken: ''
+    accessToken: '',
+    api_projects: 'projects',
+    api_task: 'tasks',
   }
 
   if (!env) {

@@ -9,7 +9,6 @@ Feature: Login Page Tests
 
         #Set variables 
         Given def projectName = dataGenerator.getRandomProjectName()
-        Given def projectNameUpdate = dataGenerator.getRandomProjectName()
         Given def taskName = dataGenerator.getRandomTaskName()
         Given def taskDescription = dataGenerator.getRandomTaskDescription()
         Given def taskDue = dataGenerator.dueDate(5)
@@ -19,8 +18,9 @@ Feature: Login Page Tests
     Scenario: Create a new project, then add a new task and finally delete task and project
        
         #Create a new Project
-        Given params { name: #(projectName), color: 'yellow', is_favorite: true }
-        Given path 'projects'
+        Given def randomColor = dataGenerator.colorProject()
+        Given params { name: #(projectName), color: #(randomColor), is_favorite: true }
+        Given path api_projects
         When method POST
         Then status 200
         And match response == projectSchemaPOST
@@ -29,32 +29,33 @@ Feature: Login Page Tests
         * def projectId = response.id
 
         #List the new project
-        Given path 'projects',projectId
+        Given path api_projects,projectId
         When method GET
         Then status 200
         And match response.id == projectId
         And match response.name == projectName
-        And match response.color == 'yellow'
+        And match response.color == randomColor
         And match response.is_favorite == true
 
         #Update the new project
-        Given params { name: #(projectNameUpdate), color: 'violet', is_favorite: false}
-        Given path 'projects',projectId
+        Given def randomColorUpdate = dataGenerator.colorProject()
+        Given params { color: #(randomColorUpdate), is_favorite: false}
+        Given path api_projects,projectId
         When method POST
         Then status 200
 
         #List the updated project and verify response values
-        Given path 'projects',projectId
+        Given path api_projects,projectId
         When method GET
         Then status 200
         And match response.id == projectId
-        And match response.name == projectNameUpdate
-        And match response.color == 'violet'
+        And match response.name == projectName
+        And match response.color == randomColorUpdate
         And match response.is_favorite == false
 
         #Verify empty tasks in new project
         Given params { project_id: #(projectId)}
-        Given path 'tasks'
+        Given path api_task
         Given method GET
         Then status 200
         And match response == "#array"
@@ -62,7 +63,7 @@ Feature: Login Page Tests
 
         #Create new task in a project
         Given params {content: #(taskName), description: #(taskDescription), project_id: #(projectId)}
-        Given path 'tasks'
+        Given path api_task
         Given method POST
         Then status 200
         And match response == taskSchemaPOST
@@ -70,23 +71,23 @@ Feature: Login Page Tests
 
         #Update the due date in task
         Given params {due_date: #(taskDue)}
-        Given path 'tasks',taskId
+        Given path api_task,taskId
         Given method POST
         Then status 200
 
         #List updated task and verify response values
         Given params { project_id: #(projectId)}
-        Given path 'tasks'
+        Given path api_task
         Given method GET
         Then status 200
         And match response[0].due.date == taskDue
 
         #Delete task
-        Given path 'tasks',taskId
+        Given path api_task,taskId
         Given method DELETE
         Then status 204
 
         #Delete project
-        Given path 'projects',projectId
+        Given path api_projects,projectId
         Given method DELETE
         Then status 204
